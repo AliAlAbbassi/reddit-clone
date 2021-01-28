@@ -7,11 +7,12 @@ import { buildSchema } from 'type-graphql'
 import { HelloResolver } from './resolvers/hello'
 import { PostResolver } from './resolvers/post'
 import { UserResolver } from './resolvers/user'
-import redis from 'redis'
+import Redis from 'ioredis'
 import session from 'express-session'
 import connectRedis from 'connect-redis'
-import { __prod__ } from './constants'
+import { COOKIE_NAME, __prod__ } from './constants'
 import { MyContext } from './types'
+import cors from 'cors'
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig)
@@ -19,12 +20,14 @@ const main = async () => {
   const app = express()
 
   const RedisStore = connectRedis(session)
-  const redisClient = redis.createClient()
+  const redis = new Redis()
+
+  app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
   app.use(
     session({
-      name: 'qid',
+      name: COOKIE_NAME,
       store: new RedisStore({
-        client: redisClient,
+        client: redis,
         disableTouch: true,
       }),
       cookie: {
@@ -48,10 +51,11 @@ const main = async () => {
       em: orm.em,
       req,
       res,
+      redis,
     }),
   })
 
-  apolloServer.applyMiddleware({ app })
+  apolloServer.applyMiddleware({ app, cors: false })
 
   app.listen(4000, () => {
     console.log('Server running on localhost:4000')
