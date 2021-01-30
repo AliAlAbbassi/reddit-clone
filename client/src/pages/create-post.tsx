@@ -13,6 +13,7 @@ import { useIsAuth } from '../Utils/useIsAuth';
 const createPost: React.FC<{}> = ({ }) => {
     const router = useRouter()
     useIsAuth()
+    const [, createPost] = useCreatePostMutation()
 
     return (
         <Layout variant='small'>
