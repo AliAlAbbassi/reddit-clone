@@ -36,6 +36,10 @@ const theme = extendTheme({
       viewBox: '0 0 3000 3163',
     },
   },
+  config: {
+    initialColorMode: 'light',
+    useSystemColorMode: false
+  }
 })
 
 export default theme

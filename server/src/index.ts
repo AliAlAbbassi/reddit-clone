@@ -9,6 +9,7 @@ import { buildSchema } from 'type-graphql'
 import { createConnection } from 'typeorm'
 import { COOKIE_NAME, __prod__ } from './constants'
 import { Post } from './entities/Post'
+import { Updoot } from './entities/Updoot'
 import { User } from './entities/User'
 import { HelloResolver } from './resolvers/hello'
 import { PostResolver } from './resolvers/post'
@@ -23,8 +24,10 @@ const main = async () => {
     password: '04092001',
     logging: true,
     synchronize: true,
-    entities: [User, Post],
+    entities: [User, Post, Updoot],
   })
+  await conn.runMigrations()
+  await Post.delete({})
 
   const app = express()
 

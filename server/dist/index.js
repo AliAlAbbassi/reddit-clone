@@ -23,6 +23,7 @@ const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const constants_1 = require("./constants");
 const Post_1 = require("./entities/Post");
+const Updoot_1 = require("./entities/Updoot");
 const User_1 = require("./entities/User");
 const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
@@ -35,8 +36,10 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         password: '04092001',
         logging: true,
         synchronize: true,
-        entities: [User_1.User, Post_1.Post],
+        entities: [User_1.User, Post_1.Post, Updoot_1.Updoot],
     });
+    yield conn.runMigrations();
+    yield Post_1.Post.delete({});
     const app = express_1.default();
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default();
