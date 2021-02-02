@@ -1,14 +1,17 @@
-import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
-import theme from '../theme';
+export interface AppRenderProps {
+  pageProps: object
+  err?: Error
+  Component: NextComponentType<NextPageContext, AppRenderProps, object>
+  router: NextRouter
+}
+import type { NextComponentType, NextPageContext } from "next"
+import type { NextRouter } from "next/router"
+import { Chakra } from "../Chakra"
 
-
-function MyApp({ Component, pageProps }: any) {
+export default function MyApp({ Component, pageProps }: AppRenderProps) {
   return (
-    <ChakraProvider resetCSS theme={theme} >
-      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+    <Chakra>
       <Component {...pageProps} />
-    </ChakraProvider>
+    </Chakra>
   )
 }
-
-export default MyApp

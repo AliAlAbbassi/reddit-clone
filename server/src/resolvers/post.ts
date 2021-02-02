@@ -59,7 +59,7 @@ export class PostResolver {
           `
           update updoot
           set value = $1
-          where "postId" = $2 and "UserId" = $3
+          where "postId" = $2 and "userId" = $3
         `,
           [realValue, postId, userId]
         )
@@ -160,8 +160,8 @@ export class PostResolver {
   }
 
   @Query(() => Post, { nullable: true })
-  post(@Arg('id') id: number): Promise<Post | undefined> {
-    return Post.findOne(id)
+  post(@Arg('id', () => Int) id: number): Promise<Post | undefined> {
+    return Post.findOne(id, { relations: ['creator'] })
   }
 
   @Mutation(() => Post)
