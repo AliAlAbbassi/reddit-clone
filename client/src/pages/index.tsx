@@ -1,10 +1,12 @@
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { Box, Button, Flex, Heading, Icon, IconButton, Link, Stack, Text } from '@chakra-ui/react';
 import { withUrqlClient } from 'next-urql';
 import NextLink from 'next/link';
 import React, { useState } from 'react';
+import { EditDeletePostButton } from '../components/EditDeletePostButton';
 import { Layout } from '../components/Layout';
 import { UpdootSection } from '../components/UpdootSection';
-import { usePostsQuery } from '../generated/graphql';
+import { useDeletePostMutation, useMeQuery, usePostsQuery } from '../generated/graphql';
 import { createUrqlClient } from '../Utils/createUrqlClient';
 
 const Index = () => {
@@ -12,23 +14,29 @@ const Index = () => {
   const [{ data, fetching }] = usePostsQuery({
     variables
   })
+  const [, deletePost] = useDeletePostMutation()
 
   return (
     <Layout>
       <Box mb={8}>
         {!data && fetching ? (<div>Loading...</div>) :
           (<Stack spacing={8}>
-            {data!.posts.posts.map(p => (
+            {data!.posts.posts.map(p => !p ? null : (
               <Flex key={p.id} p={5} shadow='md' borderWidth='1px'>
                 <UpdootSection post={p} />
-                <Box>
+                <Box flex={1}>
                   <NextLink href='/post/[id]' as={`/post/${p.id}`}>
                     <Link>
                       <Heading fontSize='xl'>{p.title}</Heading>
                     </Link>
                   </NextLink>
                   <Text>posted by {p.creator.username}</Text>
-                  <Text mt={4}>{p.text}</Text>
+                  <Flex align='center'>
+                    <Text flex={1} mt={4}>{p.text}</Text>
+                    <Box ml='auto'>
+                      <EditDeletePostButton id={p.id} creatorId={p.creatorId} />
+                    </Box>
+                  </Flex>
                 </Box>
               </Flex>
             )
