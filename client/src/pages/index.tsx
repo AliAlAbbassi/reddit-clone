@@ -11,11 +11,14 @@ import { createUrqlClient } from '../Utils/createUrqlClient';
 
 const Index = () => {
   const [variables, setVariables] = useState({ limit: 10, cursor: null as null | string })
-  const [{ data, fetching }] = usePostsQuery({
+  const [{ data, error, fetching }] = usePostsQuery({
     variables
   })
   const [, deletePost] = useDeletePostMutation()
 
+  if (!fetching && !data) {
+    return <div>{error?.message}</div>
+  }
   return (
     <Layout>
       <Box mb={8}>

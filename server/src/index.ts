@@ -15,6 +15,8 @@ import { HelloResolver } from './resolvers/hello'
 import { PostResolver } from './resolvers/post'
 import { UserResolver } from './resolvers/user'
 import { MyContext } from './types'
+import { createUpdootLoader } from './Utils/createUpdootLoader'
+import { createUserLoader } from './Utils/createUserLoader'
 
 const main = async () => {
   const conn = await createConnection({
@@ -62,6 +64,8 @@ const main = async () => {
       req,
       res,
       redis,
+      userLoader: createUserLoader(),
+      updootLoader: createUpdootLoader()
     }),
   })
 
